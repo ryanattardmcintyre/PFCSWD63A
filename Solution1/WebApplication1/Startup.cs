@@ -12,6 +12,8 @@ using WebApplication1.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebApplication1.Services.Interfaces;
+using WebApplication1.Services.Repositories;
 
 namespace WebApplication1
 {
@@ -28,12 +30,18 @@ namespace WebApplication1
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
+                options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection")));
+             
+
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+
+
             services.AddControllersWithViews();
-            services.AddRazorPages();
+            services.AddRazorPages(); 
 
             services.AddAuthentication()
                    .AddGoogle(options =>
@@ -44,6 +52,10 @@ namespace WebApplication1
                        options.ClientId = googleAuthNSection["ClientId"];
                        options.ClientSecret = googleAuthNSection["ClientSecret"];
                    });
+
+            //Blogsrepository is to be initialized whenever there is a request for IBlogsRepository
+            services.AddScoped<IBlogsRepository, BlogsRepository>();
+            services.AddScoped<IPostsRepository, PostsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

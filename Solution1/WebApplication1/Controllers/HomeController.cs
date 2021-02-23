@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebApplication1.Models;
+using WebApplication1.Services.Interfaces;
 
 namespace WebApplication1.Controllers
 {
@@ -13,9 +14,13 @@ namespace WebApplication1.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IBlogsRepository _blogsRepo)
         {
             _logger = logger;
+
+
+             
+
         }
 
         public IActionResult Index()
