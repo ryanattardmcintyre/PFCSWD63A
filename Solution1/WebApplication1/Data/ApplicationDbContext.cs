@@ -21,9 +21,12 @@ namespace WebApplication1.Data
         {
             //1. Microsoft.EntityFrameworkCore.Proxies
             //2. paste this code
-
+            
             optionsBuilder.UseLazyLoadingProxies();
         }
+
+
+       
 
     }
 }

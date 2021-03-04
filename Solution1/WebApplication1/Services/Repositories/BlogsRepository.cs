@@ -8,6 +8,8 @@ using WebApplication1.Services.Interfaces;
 
 namespace WebApplication1.Services.Repositories
 {
+  
+
     public class BlogsRepository : IBlogsRepository
     {
         private readonly ApplicationDbContext _context;
@@ -16,16 +18,18 @@ namespace WebApplication1.Services.Repositories
 
         public void AddBlog(Blog b)
         {
+            b.BlogId = Guid.NewGuid();
+
             _context.Blogs.Add(b);
             _context.SaveChanges();
         }
 
-        public void DeleteBlog(int id)
+        public void DeleteBlog(Guid id)
         {
             _context.Blogs.Remove(GetBlog(id));
         }
 
-        public Blog GetBlog(int id)
+        public Blog GetBlog(Guid id)
         {
             return _context.Blogs.SingleOrDefault(x => x.BlogId == id);
         }

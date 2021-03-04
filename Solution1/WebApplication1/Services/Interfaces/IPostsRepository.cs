@@ -14,7 +14,7 @@ namespace WebApplication1.Services.Interfaces
         void DeletePost(int id);
 
         IQueryable<Post> GetPosts();
-        IQueryable<Post> GetPosts(int blogId);
+        IQueryable<Post> GetPosts(Guid blogId);
 
         void UpdatePost(Post b);
     }

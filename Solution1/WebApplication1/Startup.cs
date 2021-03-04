@@ -38,6 +38,7 @@ namespace WebApplication1
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
 
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 
             services.AddControllersWithViews();
@@ -52,6 +53,13 @@ namespace WebApplication1
                        options.ClientId = googleAuthNSection["ClientId"];
                        options.ClientSecret = googleAuthNSection["ClientSecret"];
                    });
+
+
+            services.AddAuthentication().AddMicrosoftAccount(microsoftOptions =>
+            {
+                microsoftOptions.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+                microsoftOptions.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
+            });
 
             //Blogsrepository is to be initialized whenever there is a request for IBlogsRepository
             services.AddScoped<IBlogsRepository, BlogsRepository>();
@@ -74,6 +82,9 @@ namespace WebApplication1
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+
+
 
             app.UseRouting();
 

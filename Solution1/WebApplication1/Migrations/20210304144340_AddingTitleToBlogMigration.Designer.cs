@@ -10,8 +10,8 @@ using WebApplication1.Data;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210223102427_InitialBlog")]
-    partial class InitialBlog
+    [Migration("20210304144340_AddingTitleToBlogMigration")]
+    partial class AddingTitleToBlogMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -221,10 +221,12 @@ namespace WebApplication1.Migrations
 
             modelBuilder.Entity("WebApplication1.Models.Domain.Blog", b =>
                 {
-                    b.Property<int>("BlogId")
+                    b.Property<Guid>("BlogId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
 
                     b.Property<string>("Url")
                         .HasColumnType("text");
@@ -241,8 +243,8 @@ namespace WebApplication1.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<int>("BlogId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("BlogId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Content")
                         .HasColumnType("text");

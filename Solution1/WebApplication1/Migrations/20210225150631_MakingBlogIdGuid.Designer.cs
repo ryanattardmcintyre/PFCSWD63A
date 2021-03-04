@@ -10,8 +10,8 @@ using WebApplication1.Data;
 namespace WebApplication1.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210223094728_InitialMigrationSchema")]
-    partial class InitialMigrationSchema
+    [Migration("20210225150631_MakingBlogIdGuid")]
+    partial class MakingBlogIdGuid
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -219,6 +219,43 @@ namespace WebApplication1.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("WebApplication1.Models.Domain.Blog", b =>
+                {
+                    b.Property<Guid>("BlogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("text");
+
+                    b.HasKey("BlogId");
+
+                    b.ToTable("Blogs");
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.Domain.Post", b =>
+                {
+                    b.Property<int>("PostId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<Guid>("BlogId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("text");
+
+                    b.HasKey("PostId");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("Posts");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -266,6 +303,15 @@ namespace WebApplication1.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("WebApplication1.Models.Domain.Post", b =>
+                {
+                    b.HasOne("WebApplication1.Models.Domain.Blog", "Blog")
+                        .WithMany("Posts")
+                        .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

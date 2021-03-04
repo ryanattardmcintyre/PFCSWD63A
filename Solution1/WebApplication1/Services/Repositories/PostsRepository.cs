@@ -37,7 +37,7 @@ namespace WebApplication1.Services.Repositories
             return _context.Posts;
         }
 
-        public IQueryable<Post> GetPosts(int blogId)
+        public IQueryable<Post> GetPosts(Guid blogId)
         {
             return GetPosts().Where(x => x.BlogId == blogId);
         }
