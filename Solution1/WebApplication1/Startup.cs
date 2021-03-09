@@ -64,6 +64,7 @@ namespace WebApplication1
             //Blogsrepository is to be initialized whenever there is a request for IBlogsRepository
             services.AddScoped<IBlogsRepository, BlogsRepository>();
             services.AddScoped<IPostsRepository, PostsRepository>();
+            services.AddScoped<ICacheRepository, CacheRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
