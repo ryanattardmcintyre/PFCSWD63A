@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
 using WebApplication1.Services.Interfaces;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize(Roles ="Admin")]
     public class AdminController : Controller
     {
 
@@ -29,5 +31,9 @@ namespace WebApplication1.Controllers
             return View();
 
         }
+
+
+
+
     }
 }

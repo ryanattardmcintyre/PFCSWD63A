@@ -24,9 +24,24 @@
                     <ul class="navbar-nav flex-grow-1">
                         @foreach (var menu in CacheService.GetMenus())
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="@menu.Url">@menu.Title</a>
-                            </li>
+                            if (menu.Url.Contains("Admin"))
+                            {
+                                if (User != null)
+                                {
+                                    if (User.IsInRole("ADMIN"))
+                                    {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" href="@menu.Url">@menu.Title</a>
+                                    </li>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="@menu.Url">@menu.Title</a>
+                                </li>
+                            }
                         }
                     </ul>
                 </div>
