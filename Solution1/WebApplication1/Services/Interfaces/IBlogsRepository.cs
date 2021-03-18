@@ -9,6 +9,7 @@ namespace WebApplication1.Services.Interfaces
     public interface IBlogsRepository
     {
         void AddBlog(Blog b);
+
         Blog GetBlog(Guid id);
 
         void DeleteBlog(Guid id);

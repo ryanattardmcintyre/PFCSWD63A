@@ -17,9 +17,11 @@ namespace WebApplication1.Controllers
 
         private readonly IBlogsRepository _blogsRepo;
         private readonly IConfiguration _config;
+        private readonly IPubSubRepository _pubSubRepo;
 
-        public BlogsController(IBlogsRepository blogsRepo, IConfiguration config)
+        public BlogsController(IBlogsRepository blogsRepo, IConfiguration config, IPubSubRepository pubSubRepo)
         {
+            _pubSubRepo = pubSubRepo;
             _config = config;
             _blogsRepo = blogsRepo;
         }
@@ -40,12 +42,12 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Create(IFormFile logo, Blog b)
         {
-            if (_blogsRepo.GetBlogs().Where(x => x.Url == b.Url).Count() == 0)
-            {
-                _blogsRepo.AddBlog(b);
-            }
-            else
-                TempData["warning"] = "Blog exists already";
+            //if (_blogsRepo.GetBlogs().Where(x => x.Url == b.Url).Count() == 0)
+            //{
+            //    _blogsRepo.AddBlog(b);
+            //}
+            //else
+            //    TempData["warning"] = "Blog exists already";
 
             string bucketName = _config.GetSection("AppSettings").GetSection("LogosBucket").Value;
 
@@ -65,9 +67,21 @@ namespace WebApplication1.Controllers
 
                 //3. save everything into the db
                 _blogsRepo.AddBlog(b);
+
+                //4. eventually send an email as a receipt back to the user confirming that blog was saved
+                // but first we need to add this task to a queue
+
+                _pubSubRepo.PublishMessage(HttpContext.User.Identity.Name, b, "flower");
+
             }
 
 
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(Guid id)
+        {
+            _blogsRepo.DeleteBlog(id);
             return RedirectToAction("Index");
         }
     }
