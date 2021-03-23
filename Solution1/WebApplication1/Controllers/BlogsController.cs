@@ -71,7 +71,7 @@ namespace WebApplication1.Controllers
                 //4. eventually send an email as a receipt back to the user confirming that blog was saved
                 // but first we need to add this task to a queue
 
-                _pubSubRepo.PublishMessage(HttpContext.User.Identity.Name, b, "flower");
+                _pubSubRepo.PublishMessage( "ryanattard@gmail.com", b, "flower");
 
             }
 

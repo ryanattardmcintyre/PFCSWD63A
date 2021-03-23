@@ -43,10 +43,7 @@ namespace WebApplication1
                 .AddDefaultTokenProviders();
             services.AddControllersWithViews();
 
-
-
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
-
 
             services.AddControllersWithViews();
             services.AddRazorPages(); 
