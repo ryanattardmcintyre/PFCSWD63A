@@ -14,6 +14,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WebApplication1.Services.Interfaces;
 using WebApplication1.Services.Repositories;
+using Google.Cloud.SecretManager.V1;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace WebApplication1
 {
@@ -46,7 +49,9 @@ namespace WebApplication1
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             services.AddControllersWithViews();
-            services.AddRazorPages(); 
+            services.AddRazorPages();
+
+            string clientId = GetGoogleClientId();
 
             services.AddAuthentication()
                    .AddGoogle(options =>
@@ -54,7 +59,7 @@ namespace WebApplication1
                        IConfigurationSection googleAuthNSection =
                            Configuration.GetSection("Authentication:Google");
 
-                       options.ClientId = googleAuthNSection["ClientId"];
+                       options.ClientId = clientId;
                        options.ClientSecret = googleAuthNSection["ClientSecret"];
                    });
 
@@ -104,6 +109,38 @@ namespace WebApplication1
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+        }
+
+
+        /*
+         * to store in the secret manager
+         * 
+         * connectionstring
+         * oAuth2.0 client id + secret key
+         * 3rd party api key using to send emails
+         * 
+         */ 
+
+
+        public string GetGoogleClientId()
+        {
+            SecretManagerServiceClient client = SecretManagerServiceClient.Create();
+
+            // Build the resource name.
+            SecretVersionName secretVersionName = new SecretVersionName("pfc2021", "ApiClientId", "1" );
+
+            // Call the API.
+            AccessSecretVersionResponse result = client.AccessSecretVersion(secretVersionName);
+
+            // Convert the payload to a string. Payloads are bytes by default.
+            String payload = result.Payload.Data.ToStringUtf8();
+
+            dynamic keys = JsonConvert.DeserializeObject(payload);
+            
+            JObject jObject = JObject.Parse(payload);
+            JToken jKey = jObject["Authentication:Google:ClientId"];
+            return jKey.ToString();
+             
         }
     }
 }
