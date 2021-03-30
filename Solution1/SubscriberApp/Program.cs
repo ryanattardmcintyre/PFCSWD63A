@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
+using System.Threading.Tasks;
 using Google.Cloud.PubSub.V1;
 using Grpc.Core;
 using Newtonsoft.Json;
@@ -14,6 +16,7 @@ namespace SubscriberApp
     {
         static void Main(string[] args)
         {
+            SendEmail();
 
             System.Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS",
                 @"C:\Users\Ryan\Downloads\pfc2021-05871ada539e.json");
@@ -82,6 +85,21 @@ namespace SubscriberApp
             }
             else return false;
            
+        }
+
+
+        static void SendEmail()
+        {
+            HttpClient client = new HttpClient();
+            var uri = new Uri("https://us-central1-pfc2021.cloudfunctions.net/hello-http-function3");
+
+            var t =  client.GetAsync(uri);
+            t.Wait();
+            Task<string> t2 = t.Result.Content.ReadAsStringAsync();
+            t2.Wait();
+            string msg = t2.Result;
+
+            Console.ReadLine();
         }
     }
 }
