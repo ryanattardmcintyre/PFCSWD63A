@@ -17,6 +17,7 @@ using WebApplication1.Services.Repositories;
 using Google.Cloud.SecretManager.V1;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Google.Cloud.Diagnostics.AspNetCore;
 
 namespace WebApplication1
 {
@@ -36,6 +37,12 @@ namespace WebApplication1
                 options.UseNpgsql(
                     Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddGoogleExceptionLogging(options =>
+            {
+                options.ProjectId = "pfc2021";
+                options.ServiceName = "PFC2021SWD63a";
+                options.Version = "0.01";
+            });
 
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -75,6 +82,9 @@ namespace WebApplication1
             services.AddScoped<IPostsRepository, PostsRepository>();
             services.AddScoped<ICacheRepository, CacheRepository>();
             services.AddScoped<IPubSubRepository, PubSubRepository>();
+            services.AddScoped<ILogRepository, LogRepository>();
+
+          
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -92,10 +102,11 @@ namespace WebApplication1
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+
+
+            app.UseGoogleExceptionLogging();
+
             app.UseStaticFiles();
-
-
-
 
             app.UseRouting();
 
